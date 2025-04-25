@@ -65,24 +65,49 @@ planned_df = pd.concat(all_months, ignore_index = True)
 #Actual hours sheet
 actual_df = pd.read_excel("Anon_Hours.xlsx", sheet_name = "Hours", skiprows = 2)
 #TODO: get rid of hardcoded month names
-actual_df.columns = ['employee', 'project', 'Nov_2023', 'Dec_2023', 'Jan_2024', 'Feb_2024', 'Total']
+actual_df.columns = ['employee', 'project', 'Nov', 'Dec', 'Jan', 'Feb', 'Total']
 actual_df.dropna(subset=['employee', 'project'], inplace=True)
 actual_df['employee'] = actual_df['employee'].astype(str)
 actual_df['project'] = actual_df['project'].astype(str)
 
 #melt into long format
 actual_long = actual_df.melt(id_vars=['employee', 'project'],
-                             value_vars=['Nov_2023', 'Dec_2023', 'Jan_2024', 'Feb_2024'],
+                             value_vars=['Nov', 'Dec', 'Jan', 'Feb'],
                              var_name='month', value_name='actual_hours')
+
 actual_long['actual_hours'] = actual_long['actual_hours'].astype(str).str.replace(',', '.', regex=False)
 actual_long['actual_hours'] = pd.to_numeric(actual_long['actual_hours'], errors='coerce')
 actual_long.dropna(subset=['actual_hours'], inplace=True)
-
-print(actual_long)
-
+actual_long = actual_long.groupby(['employee', 'project', 'month'], as_index=False)['actual_hours'].sum()
 
 
+# Ensure employee and project are strings in both DataFrames
+planned_df['employee'] = planned_df['employee'].astype(str)
+planned_df['project'] = planned_df['project'].astype(str)
+actual_long['employee'] = actual_long['employee'].astype(str)
+actual_long['project'] = actual_long['project'].astype(str)
 
+#merged sheet
+merged_df = pd.merge(planned_df, actual_long, on=['employee', 'project', 'month'], how='outer')
+
+#fill missing with 0
+merged_df['planned_hours'] = merged_df['planned_hours'].fillna(0)
+merged_df['actual_hours'] = merged_df['actual_hours'].fillna(0)
+
+#calculate difference
+merged_df['diff'] = merged_df['actual_hours'] - merged_df['planned_hours']
+
+#calculate total_difference per employee and month
+merged_df['total_diff'] = merged_df.groupby(['employee', 'month'])['diff'].transform('sum')
+
+#sort
+merged_df.sort_values(by=['employee', 'month', 'project'], inplace=True)
+
+
+
+#save excel
+merged_df.to_excel("Capacity_Comparison_Flat.xlsx", index=False)
+print("Excel file with merged data saved as 'Capacity_Comparison_Flat.xlsx'.")
 
 
 

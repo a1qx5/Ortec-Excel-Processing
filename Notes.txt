@@ -1,0 +1,8 @@
+#TODO's:
+1. only displpay values for total_diff at the LAST appearance of the employee - month relation
+2. do NOT count vacantion days for diff or total_diff (and highlight that row in orange)
+3. get rid of hardcoded month names (line 68)
+
+UNCERTAINTIES:
+-should the total_diff column tell the difference of hours of the relation [employee - project] (across all months)
+    instead of [employee - month]?
