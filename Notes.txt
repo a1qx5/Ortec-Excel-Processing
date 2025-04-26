@@ -1,7 +1,8 @@
 #TODO's:
 DONE: 1. only displpay values for total_diff at the LAST appearance of the employee - month relation
-DONE: 2. do NOT count vacantion days for diff or total_diff (and highlight that row in orange)
+DONE: 2. do NOT count vacantion days for diff or total_diff
 DONE: 3. get rid of hardcoded month names (line 68)
-4. add another column for difference per project across all months
+COMMENTED: 4. add another column for difference per project across all months
+5. highlight vacation row (columns planned actual and diff) with orange
 
 UNCERTAINTIES:
