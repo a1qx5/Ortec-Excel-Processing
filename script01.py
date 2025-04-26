@@ -39,10 +39,6 @@ def process_capacity_sheet(df, month_name):
 
     return result
 
-#nov_df = capacity_sheets['Resource Requirements - Nov']
-#processed_nov = process_capacity_sheet(nov_df, 'Nov_2023')
-#print(processed_nov)
-
 all_months = []
 #automatically process all monthly sheets
 for sheet_name, df in capacity_sheets.items():
@@ -57,29 +53,38 @@ for sheet_name, df in capacity_sheets.items():
 
 #combine all monthly data into a single DataFrame
 planned_df = pd.concat(all_months, ignore_index = True)
-#print(planned_df)
-
-
-
 
 #Actual hours sheet
 actual_df = pd.read_excel("Anon_Hours.xlsx", sheet_name = "Hours", skiprows = 2)
-#TODO: get rid of hardcoded month names
-actual_df.columns = ['employee', 'project', 'Nov', 'Dec', 'Jan', 'Feb', 'Total']
+
+#normalize columns
+actual_df.columns = actual_df.columns.str.strip().str.lower()
+
+#drop rows without employee or project
 actual_df.dropna(subset=['employee', 'project'], inplace=True)
+
+#ensure they are strings
 actual_df['employee'] = actual_df['employee'].astype(str)
 actual_df['project'] = actual_df['project'].astype(str)
 
+#detect month columns
+month_columns = [col for col in actual_df.columns if col not in ['employee', 'project', 'total']]
+
 #melt into long format
 actual_long = actual_df.melt(id_vars=['employee', 'project'],
-                             value_vars=['Nov', 'Dec', 'Jan', 'Feb'],
+                             value_vars=month_columns,
                              var_name='month', value_name='actual_hours')
 
+#handling the month column
+actual_long['month'] = actual_long['month'].str.extract(r'([A-Za-z]+)')
+actual_long['month'] = actual_long['month'].str.capitalize()
+
+#clean
 actual_long['actual_hours'] = actual_long['actual_hours'].astype(str).str.replace(',', '.', regex=False)
 actual_long['actual_hours'] = pd.to_numeric(actual_long['actual_hours'], errors='coerce')
 actual_long.dropna(subset=['actual_hours'], inplace=True)
-actual_long = actual_long.groupby(['employee', 'project', 'month'], as_index=False)['actual_hours'].sum()
 
+actual_long = actual_long.groupby(['employee', 'project', 'month'], as_index=False)['actual_hours'].sum()
 
 # Ensure employee and project are strings in both DataFrames
 planned_df['employee'] = planned_df['employee'].astype(str)
@@ -94,20 +99,36 @@ merged_df = pd.merge(planned_df, actual_long, on=['employee', 'project', 'month'
 merged_df['planned_hours'] = merged_df['planned_hours'].fillna(0)
 merged_df['actual_hours'] = merged_df['actual_hours'].fillna(0)
 
-#calculate difference
+#calculate diff
 merged_df['diff'] = merged_df['actual_hours'] - merged_df['planned_hours']
 
-#calculate total_difference per employee and month
+#handle vacation/leave rows
+vacation_mask = merged_df['project'].str.lower().str.contains('vacation|leave', na=False)
+
+#set diff = 0 for vacation/leave
+merged_df.loc[vacation_mask, 'diff'] = 0
+
+#calculate total_diff per employee and month
 merged_df['total_diff'] = merged_df.groupby(['employee', 'month'])['diff'].transform('sum')
+
+#only show total_diff at the last occurence per employee-month
+merged_df['total_diff_per_month'] = ''
+
+#find the last occurrence per employee_month
+last_indexes = merged_df.groupby(['employee', 'month']).tail(1).index
+
+#fill total_diff only for the last row
+merged_df.loc[last_indexes, 'total_diff_per_month'] = merged_df.loc[last_indexes, 'total_diff']
+
+#drop the old total_diff
+merged_df.drop(columns=['total_diff'], inplace=True)
+
+#calculate total_diff_per_project
+####merged_df['total_diff_per_project'] = merged_df.groupby(['employee', 'project'])['diff'].transform('sum')
 
 #sort
 merged_df.sort_values(by=['employee', 'month', 'project'], inplace=True)
 
-
-
 #save excel
 merged_df.to_excel("Capacity_Comparison_Flat.xlsx", index=False)
 print("Excel file with merged data saved as 'Capacity_Comparison_Flat.xlsx'.")
-
-
-
