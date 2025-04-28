@@ -1,9 +1,21 @@
 import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
+from tkinter import Tk, filedialog, simpledialog
 
+#Open a file picker for capacity planning file
+Tk().withdraw()
+capacity_file = filedialog.askopenfilename(title="Select Capacity Planning Excel File:", filetypes=[("Excel Files", "*xlsx")])
 
-capacity_sheets = pd.read_excel("Anon_Capacity Planning.xlsx", sheet_name=None)
+#Open a file picker for actual hours file
+actual_file = filedialog.askopenfilename(title="Select Actual Hours Excel File:", filetypes=[("Excel Files", "*xlsx")])
+
+#Ask user for output file name
+output_file_name = simpledialog.askstring("Save As", "Enter the output Excel file name: ")
+if '.xlsx' not in output_file_name:
+    output_file_name += ".xlsx"
+
+capacity_sheets = pd.read_excel(capacity_file, sheet_name=None)
 
 def process_capacity_sheet(df, month_name):
     """Returns one capacity sheet"""
@@ -58,7 +70,7 @@ for sheet_name, df in capacity_sheets.items():
 planned_df = pd.concat(all_months, ignore_index = True)
 
 #Actual hours sheet
-actual_df = pd.read_excel("Anon_Hours.xlsx", sheet_name = "Hours", skiprows = 2)
+actual_df = pd.read_excel(actual_file, sheet_name = "Hours", skiprows = 2)
 
 #normalize columns
 actual_df.columns = actual_df.columns.str.strip().str.lower()
@@ -133,12 +145,12 @@ merged_df.drop(columns=['total_diff'], inplace=True)
 merged_df.sort_values(by=['employee', 'month', 'project'], inplace=True)
 
 #save excel
-merged_df.to_excel("Capacity_Comparison_Flat.xlsx", index=False)
-print("Excel file with merged data saved as 'Capacity_Comparison_Flat.xlsx'.")
+merged_df.to_excel(output_file_name, index=False)
+print(f"Excel file with merged data saved as {output_file_name}")
 
 
 #excel cell styles
-wb = load_workbook("Capacity_Comparison_Flat.xlsx")
+wb = load_workbook(output_file_name)
 ws=wb.active
 
 #vacation rows are highlighted in orange
@@ -157,5 +169,5 @@ for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
         row[columns['diff'] - 1].fill = orange_fill
 
 #save the workbook
-wb.save("Capacity_Comparison_Flat.xlsx")
+wb.save(output_file_name)
 
