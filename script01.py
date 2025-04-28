@@ -182,6 +182,7 @@ merged_df.sort_values(by=['employee', 'month', 'project'], inplace=True)
 #save excel
 merged_df.to_excel(output_file_name, index=False)
 print(f"Excel file with merged data saved as {output_file_name}")
+messagebox.showinfo("", f"Excel file saved as {output_file_name}")
 
 
 #excel cell styles
@@ -205,4 +206,5 @@ for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
 
 #save the workbook
 wb.save(output_file_name)
+
 
