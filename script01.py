@@ -7,7 +7,7 @@ from tkinter import Tk, filedialog, simpledialog, messagebox
 Tk().withdraw()
 capacity_file = filedialog.askopenfilename(title="Select Capacity Planning Excel File:", filetypes=[("Excel Files", "*.xlsx")])
 
-#check the selected excel file's structure
+#check the selected Excel file's structure
 try:
     test_capacity = pd.read_excel(capacity_file, sheet_name=None)
 
@@ -33,7 +33,7 @@ except Exception as e:
 #Open a file picker for actual hours file
 actual_file = filedialog.askopenfilename(title="Select Actual Hours Excel File:", filetypes=[("Excel Files", "*.xlsx")])
 
-#check the selected excel file's structure
+#check the selected Excel file's structure
 try:
     test_actual = pd.read_excel(actual_file, sheet_name="Hours", skiprows=2)
     actual_columns = test_actual.columns.str.strip().str.lower()
@@ -161,7 +161,7 @@ merged_df.loc[vacation_mask, 'diff'] = 0
 #calculate total_diff per employee and month
 merged_df['total_diff'] = merged_df.groupby(['employee', 'month'])['diff'].transform('sum')
 
-#only show total_diff at the last occurence per employee-month
+#only show total_diff at the last occurrence per employee-month
 merged_df['total_diff_per_month'] = ''
 
 #find the last occurrence per employee_month
