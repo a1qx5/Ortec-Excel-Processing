@@ -1,4 +1,7 @@
 import pandas as pd
+from openpyxl import load_workbook
+from openpyxl.styles import PatternFill
+
 
 capacity_sheets = pd.read_excel("Anon_Capacity Planning.xlsx", sheet_name=None)
 
@@ -132,3 +135,26 @@ merged_df.sort_values(by=['employee', 'month', 'project'], inplace=True)
 #save excel
 merged_df.to_excel("Capacity_Comparison_Flat.xlsx", index=False)
 print("Excel file with merged data saved as 'Capacity_Comparison_Flat.xlsx'.")
+
+
+#excel cell styles
+wb = load_workbook("Capacity_Comparison_Flat.xlsx")
+ws=wb.active
+
+#vacation rows are highlighted in orange
+orange_fill = PatternFill(start_color="FFA500", end_color="FFA500", fill_type='solid')
+
+columns = {cell.value: idx for idx, cell in enumerate(ws[1], 1)}
+
+for row in ws.iter_rows(min_row=2, max_row=ws.max_row):
+    project_cell = row[columns['project'] - 1]
+    if project_cell.value and str(project_cell.value).lower().find('vacation') != -1 or str(project_cell.value).lower().find('leave') != -1:
+        row[columns['employee'] - 1].fill = orange_fill
+        row[columns['project'] - 1].fill = orange_fill
+        row[columns['month'] - 1].fill = orange_fill
+        row[columns['planned_hours'] - 1].fill = orange_fill
+        row[columns['actual_hours'] - 1].fill = orange_fill
+        row[columns['diff'] - 1].fill = orange_fill
+
+#save the workbook
+wb.save("Capacity_Comparison_Flat.xlsx")

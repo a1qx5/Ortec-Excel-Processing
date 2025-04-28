@@ -3,7 +3,7 @@ DONE: 1. only displpay values for total_diff at the LAST appearance of the emplo
 DONE: 2. do NOT count vacantion days for diff or total_diff
 DONE: 3. get rid of hardcoded month names (line 68)
 DONE BUT COMMENTED: 4. add another column for difference per project across all months
-5. highlight vacation row (columns planned actual and diff) with orange
+DONE: 5. highlight vacation row (columns planned actual and diff) with orange
 6. add an interface so that the user can select the 2 initial excel files
 7. clean and arrange the code in different files
 8. create a .exe file
