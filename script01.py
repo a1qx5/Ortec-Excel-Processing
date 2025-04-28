@@ -1,14 +1,49 @@
 import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
-from tkinter import Tk, filedialog, simpledialog
+from tkinter import Tk, filedialog, simpledialog, messagebox
 
 #Open a file picker for capacity planning file
 Tk().withdraw()
-capacity_file = filedialog.askopenfilename(title="Select Capacity Planning Excel File:", filetypes=[("Excel Files", "*xlsx")])
+capacity_file = filedialog.askopenfilename(title="Select Capacity Planning Excel File:", filetypes=[("Excel Files", "*.xlsx")])
+
+#check the selected excel file's structure
+try:
+    test_capacity = pd.read_excel(capacity_file, sheet_name=None)
+
+    # Find first correct sheet
+    first_sheet_df = None
+    for sheet_name, df in test_capacity.items():
+        if "Resource Requirements - " in sheet_name:
+            first_sheet_df = df
+            break
+
+    if first_sheet_df is None:
+        messagebox.showerror("Error", "No valid sheet found in the Capacity Planning file!")
+        exit()
+
+    expected_columns = ['Resource', 'Project']
+    if not all(col in first_sheet_df.columns for col in expected_columns):
+        messagebox.showerror("Error", "The selected Capacity Planning file does not have the correct format!")
+        exit()
+except Exception as e:
+    messagebox.showerror("Error", f"Could not read Capacity Planning file: {e}")
+    exit()
 
 #Open a file picker for actual hours file
-actual_file = filedialog.askopenfilename(title="Select Actual Hours Excel File:", filetypes=[("Excel Files", "*xlsx")])
+actual_file = filedialog.askopenfilename(title="Select Actual Hours Excel File:", filetypes=[("Excel Files", "*.xlsx")])
+
+#check the selected excel file's structure
+try:
+    test_actual = pd.read_excel(actual_file, sheet_name="Hours", skiprows=2)
+    actual_columns = test_actual.columns.str.strip().str.lower()
+    expected_columns = ['employee', 'project']
+    if not all(col in actual_columns for col in expected_columns):
+        messagebox.showerror("Error", "The selected Actual Hours File does not have the correct format!!!")
+        exit()
+except Exception as e:
+    messagebox.showerror("Error", f"Could not read Actual Hours File: {e}")
+    exit()
 
 #Ask user for output file name
 output_file_name = simpledialog.askstring("Save As", "Enter the output Excel file name: ")
