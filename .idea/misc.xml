@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.9 (OrtecPythonScripts)" />
   </component>
-  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.11 (platforma downloads)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" project-jdk-name="Python 3.9 (Ortec-Excel-Processing)" project-jdk-type="Python SDK" />
 </project>
