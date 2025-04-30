@@ -5,14 +5,14 @@ from output_writer import save_final_excel
 
 
 def main():
-    # Pick files and output name
+    # Pick, validate & Load files and output name
     capacity_file_path = pick_capacity_file()
-    actual_file_path = pick_actual_file()
-    output_file_name = ask_output_file_name()
-
-    # Load and validate files
     capacity_sheets = load_capacity_file(capacity_file_path)
+
+    actual_file_path = pick_actual_file()
     actual_df = load_actual_file(actual_file_path)
+
+    output_file_name = ask_output_file_name()
 
     # Process data
     planned_df = prepare_planned_df(capacity_sheets)
