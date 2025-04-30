@@ -4,7 +4,7 @@ DONE: 2. do NOT count vacation days for diff or total_diff
 DONE: 3. get rid of hardcoded month names (line 68)
 DONE: BUT COMMENTED: 4. add another column for difference per project across all months
 DONE: 5. highlight vacation row (columns planned actual and diff) with orange
-DONE: 6. add an interface so that the user can select the 2 initial excel files and choose the output file name
-DONE: 7. display an error message if either of the excel files selected by the user does not follow the wanted pattern
+DONE: 6. add an interface so that the user can select the 2 initial Excel files and choose the output file name
+DONE: 7. display an error message if either of the Excel files selected by the user does not follow the wanted pattern
 DONE: 8. clean and arrange the code in different files
 9. create a .exe file

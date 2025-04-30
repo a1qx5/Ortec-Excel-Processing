@@ -1,15 +1,25 @@
 import pandas as pd
 from openpyxl import load_workbook
 from openpyxl.styles import PatternFill
-from tkinter import messagebox
+from tkinter import messagebox, filedialog
 
 
-def save_final_excel(merged_df, output_file_name):
+def save_final_excel(merged_df):
     """Save the merged DataFrame to Excel."""
-    merged_df.to_excel(output_file_name, index=False, sheet_name="Schedule Differences")
-    highlight_vacation_rows(output_file_name)
-    messagebox.showinfo("", f"Excel file saved as {output_file_name}")
+    output_file_path = filedialog.asksaveasfilename(title="Save Excel file as",
+                                                    defaultextension=".xlsx",
+                                                    filetypes=[("Excel files", "*.xlsx")],
+                                                    initialfile="Schedule_Differences.xlsx"
+                                                    )
 
+    if not output_file_path:
+        messagebox.showinfo("Cancelled", "Save cancelled by user >:(")
+        return
+
+    merged_df.to_excel(output_file_path, index=False, sheet_name="Schedule Differences")
+    highlight_vacation_rows(output_file_path)
+
+    messagebox.showinfo("Saved", f"Excel file successfully saved as: \n{output_file_path} :3")
 def highlight_vacation_rows(file_path):
     """Highlight vacation/leave rows in orange (planned, actual, diff columns)."""
     wb = load_workbook(file_path)
