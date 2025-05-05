@@ -70,41 +70,6 @@ def prepare_actual_df(actual_df):
     actual_long['month'] = actual_long['month'].astype(str)
     return actual_long
 
-# def merge_and_process(planned_df, actual_long):
-#     """Merges planned and actuals, calculates diffs, handles vacations."""
-#
-#     # Ensure both dataframes have month as string type before merging
-#     planned_df['month'] = planned_df['month'].astype(str)
-#     actual_long['month'] = actual_long['month'].astype(str)
-#
-#     merged_df = pd.merge(planned_df, actual_long, on=['employee', 'project', 'month'], how='outer')
-#
-#     merged_df['planned_hours'] = merged_df['planned_hours'].fillna(0)
-#     merged_df['actual_hours'] = merged_df['actual_hours'].fillna(0)
-#
-#     merged_df['diff'] = merged_df['actual_hours'] - merged_df['planned_hours']
-#
-#     # Handle Vacation/Leave rows
-#     vacation_mask = merged_df['project'].str.lower().str.contains('vacation|leave', na=False)
-#     merged_df.loc[vacation_mask, 'diff'] = 0
-#
-#     # Calculate total_diff per employee-month
-#     merged_df['total_diff'] = merged_df.groupby(['employee', 'month'])['diff'].transform('sum')
-#
-#     # Only show total_diff once per employee-month
-#     merged_df['total_diff_per_month'] = ''
-#     last_indexes = merged_df.groupby(['employee', 'month']).tail(1).index
-#     merged_df.loc[last_indexes, 'total_diff_per_month'] = merged_df.loc[last_indexes, 'total_diff']
-#     merged_df.drop(columns=['total_diff'], inplace=True)
-#
-#     # Calculate total_diff per employee-project across all months
-#     merged_df['total_diff_per_project'] = merged_df.groupby(['employee', 'project'])['diff'].transform('sum')
-#
-#     # Final sorting
-#     merged_df.sort_values(by=['employee', 'month', 'project'], inplace=True)
-#
-#     return merged_df
-
 def merge_and_process(planned_df, actual_long):
     """Merges planned and actuals, calculates diffs, handles vacations."""
 
@@ -141,9 +106,6 @@ def merge_and_process(planned_df, actual_long):
     last_indexes = merged_df.dropna(subset=['employee', 'month']).groupby(['employee', 'month']).tail(1).index
     merged_df.loc[last_indexes, 'total_diff_per_month'] = merged_df.loc[last_indexes, 'total_diff']
     merged_df.drop(columns=['total_diff'], inplace=True)
-
-    # Calculate total_diff per employee-project across all months
-    #merged_df['total_diff_per_project'] = merged_df.groupby(['employee', 'project'])['diff'].transform('sum')
 
     # Final sorting
     merged_df.sort_values(by=['employee', 'month', 'project'], inplace=True)
