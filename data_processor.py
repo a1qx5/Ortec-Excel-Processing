@@ -1,8 +1,6 @@
 import pandas as pd
 
 
-
-
 def process_capacity_sheet(df, month_name):
     """Processes one capacity planning sheet."""
     df.columns = [str(col).strip() for col in df.columns]
