@@ -13,5 +13,6 @@ DONE: 8. clean and arrange the code in different files
 
 
 
-
+--create requirements file
+--readme
 --create a .exe file
