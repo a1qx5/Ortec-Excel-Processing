@@ -87,14 +87,18 @@ def merge_and_process(planned_df, actual_long):
     merged_df['actual_hours'] = merged_df['actual_hours'].fillna(0)
 
     # Calculate difference
-    merged_df['diff'] = merged_df['actual_hours'] - merged_df['planned_hours']
+    merged_df['Difference'] = merged_df['actual_hours'] - merged_df['planned_hours']
 
     # Handle Vacation/Leave rows - ensure 'project' column is string for .str accessor
     merged_df['project'] = merged_df['project'].astype(str) # Ensure project is string type after merge
     vacation_mask = merged_df['project'].str.lower().str.contains('vacation|leave', na=False)
-    merged_df.loc[vacation_mask, 'diff'] = 0 # Set diff to 0 for vacation/leave
+    merged_df.loc[vacation_mask, 'Difference'] = 0 # Set Difference to 0 for vacation/leave
 
     # Final sorting
     merged_df.sort_values(by=['employee', 'month', 'project'], inplace=True)
+
+    # Capitalize & remove _ from columns
+    merged_df.columns = merged_df.columns.str.capitalize()
+    merged_df.columns = merged_df.columns.str.replace("_", " ")
 
     return merged_df

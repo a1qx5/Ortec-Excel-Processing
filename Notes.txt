@@ -10,8 +10,8 @@ DONE: 8. clean and arrange the code in different files
 DONE: 9. remove last column
 10. ask about overhead and make colored rows if not taken into consideration
 DONE: 11. remove script01
-12. capitalize name of columns
-13. MAYBE make the column width bigger
+DONE: 12. capitalize name of columns
+DONE: 13. MAYBE make the column width bigger
 
 
 
