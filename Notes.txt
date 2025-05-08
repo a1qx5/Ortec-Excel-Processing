@@ -7,12 +7,14 @@ DONE: 5. highlight vacation row (columns planned actual and diff) with orange
 DONE: 6. add an interface so that the user can select the 2 initial Excel files and choose the output file name
 DONE: 7. display an error message if either of the Excel files selected by the user does not follow the wanted pattern
 DONE: 8. clean and arrange the code in different files
-9. remove last column
-10. ask about overhead
-11. remove script01
+DONE: 9. remove last column
+10. ask about overhead and make colored rows if not taken into consideration
+DONE: 11. remove script01
+12. capitalize name of columns
+13. MAYBE make the column width bigger
 
 
 
 --create requirements file
 --readme
---create a .exe file
+--create a .exe file (remove unnecessary files beforehand)

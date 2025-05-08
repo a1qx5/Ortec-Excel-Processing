@@ -94,17 +94,6 @@ def merge_and_process(planned_df, actual_long):
     vacation_mask = merged_df['project'].str.lower().str.contains('vacation|leave', na=False)
     merged_df.loc[vacation_mask, 'diff'] = 0 # Set diff to 0 for vacation/leave
 
-    # Calculate total_diff per employee-month
-    merged_df['total_diff'] = merged_df.groupby(['employee', 'month'])['diff'].transform('sum')
-
-    # Only show total_diff once per employee-month
-    merged_df['total_diff_per_month'] = ''
-
-    # Consider handling NaNs in grouping keys if they cause issues
-    last_indexes = merged_df.dropna(subset=['employee', 'month']).groupby(['employee', 'month']).tail(1).index
-    merged_df.loc[last_indexes, 'total_diff_per_month'] = merged_df.loc[last_indexes, 'total_diff']
-    merged_df.drop(columns=['total_diff'], inplace=True)
-
     # Final sorting
     merged_df.sort_values(by=['employee', 'month', 'project'], inplace=True)
 

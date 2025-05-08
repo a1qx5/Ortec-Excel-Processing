@@ -1,4 +1,4 @@
-from tkinter import Tk, filedialog, simpledialog
+from tkinter import Tk, filedialog, simpledialog, messagebox
 
 
 def pick_capacity_file():
@@ -8,6 +8,11 @@ def pick_capacity_file():
         title="Select Capacity Planning Excel File",
         filetypes=[("Excel Files", "*.xlsx")]
     )
+
+    if not file_path:
+        messagebox.showinfo("Cancelled", "File selection cancelled by user")
+        exit()
+
     return file_path
 
 def pick_actual_file():
@@ -17,6 +22,11 @@ def pick_actual_file():
         title="Select Actual Hours Excel File",
         filetypes=[("Excel Files", "*.xlsx")]
     )
+
+    if not file_path:
+        messagebox.showinfo("Cancelled", "File selection cancelled by user")
+        exit()
+
     return file_path
 
 def ask_output_file_name():
