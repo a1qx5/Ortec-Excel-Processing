@@ -85,7 +85,7 @@ If you wish to run the script directly from the source code or modify it:
 
 #### Prerequisites (for running from source)
 
-* Python 3.x (tested with Python 3.x.x)
+* Python 3.x (tested with Python 3.11.4)
 * The following Python libraries:
     * `pandas`
     * `openpyxl`
