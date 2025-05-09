@@ -74,7 +74,7 @@ There are two ways to use this application:
 
 ### 1. Using the Executable (Recommended for most users)
 
-* Download the `YourApplicationName.exe` file from the [Releases](../../releases) page (or wherever you host it).
+* Download the `ScheduleReporter.exe` file from the **[Releases](https://github.com/a1qx5/Ortec-Excel-Processing/releases)**.
 * No installation is required. Simply double-click the `.exe` file to run it.
 * Follow the on-screen GUI prompts to select your input files and specify the output file name.
     * **Note:** The `.exe` includes all necessary components and does not require a separate Python installation.
