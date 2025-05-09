@@ -15,6 +15,6 @@ DONE: 13. MAYBE make the column width bigger
 
 
 
---create requirements file
---readme
---create a .exe file (remove unnecessary files beforehand)
+DONE (in readme): --create requirements file
+DONE: --readme
+DONE: --create a .exe file (remove unnecessary files beforehand)
