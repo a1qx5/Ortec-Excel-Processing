@@ -37,6 +37,11 @@ def highlight_vacation_and_set_width(file_path):
                 col_idx = columns[col] - 1
                 row[col_idx].fill = orange_fill
 
+    if ws.max_row > 0 and ws.max_column > 0:
+        last_column_letter = get_column_letter(ws.max_column)
+        filter_range = f"A1:{last_column_letter}{ws.max_row}"
+        ws.auto_filter.ref = filter_range
+
     wb.save(file_path)
 
 
